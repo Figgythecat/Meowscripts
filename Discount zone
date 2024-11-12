@@ -1,0 +1,40 @@
+//@version=5
+indicator("Hourly Discount Zones with Confluence", overlay=true)
+
+// Input parameters
+fibLevel = input.float(0.618, title="Fibonacci Discount Level")
+rsiThreshold = input.int(30, title="RSI Oversold Threshold")
+discountColor = input.color(color.green, title="Discount Zone Color")
+
+// Variables to store the current hour's high, low, and discount level
+var float highHour = na
+var float lowHour = na
+var float discountLevel = na
+
+// Detect the start of a new hour
+newHour = (na(time[1]) ? false : time("60") != time[1])
+
+// Recalculate the hourly high and low at the start of a new hour
+if (newHour)
+    highHour := high  // Reset high for the new hour
+    lowHour := low  // Reset low for the new hour
+else
+    highHour := math.max(highHour, high)  // Track highest price within the hour
+    lowHour := math.min(lowHour, low)  // Track lowest price within the hour
+
+// Calculate the discount level using Fibonacci retracement
+discountLevel := lowHour + (highHour - lowHour) * fibLevel
+
+// Calculate VWAP and RSI for confluence
+vwap = ta.vwap(close)
+rsi = ta.rsi(close, 14)
+
+// Define the discount zone condition with confluence
+isDiscountZone = close < discountLevel and rsi < rsiThreshold and close < vwap
+
+// Plot the discount zone when conditions are met
+plotshape(series=isDiscountZone, location=location.belowbar, color=discountColor,
+          style=shape.labelup, text="Discount Zone", size=size.small)
+
+// Alert for new discount zone detection
+
