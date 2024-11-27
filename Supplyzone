@@ -22,18 +22,7 @@ if (newHour)
     highHour := high  // Reset high for the new hour
     lowHour := low  // Reset low for the new hour
 else
-    highHour := math.max(highHour, high)  // Track highest price within the hour
-    lowHour := math.min(lowHour, low)  // Track lowest price within the hour
-
-// Calculate the supply level using Fibonacci retracement
-supplyLevel := highHour - (highHour - lowHour) * fibLevel
-
-// Calculate VWAP, RSI, Volume, and ATR for confluence
-vwap = ta.vwap(close)
-rsi = ta.rsi(close, 14)
-volumeCondition = volume > ta.sma(volume, 20) * volumeMultiplier  // Current volume above 20-period average
-atrCondition = (high - low) > ta.atr(14) * atrMultiplier  // Range is larger than average ATR
-vwapCondition = close > vwap * vwapDistanceFactor  // Price is above a certain percentage over VWAP
+    highHour :ctor  // Price is above a certain percentage over VWAP
 
 // Define the filtered supply zone condition with confluence
 isSupplyZone = close > supplyLevel and rsi > rsiThreshold and close > vwap and volumeCondition and atrCondition and vwapCondition
