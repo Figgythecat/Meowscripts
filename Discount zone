@@ -12,16 +12,6 @@ var float lowHour = na
 var float discountLevel = na
 
 // Detect the start of a new hour
-newHour = (na(time[1]) ? false : time("60") != time[1])
-
-// Recalculate the hourly high and low at the start of a new hour
-if (newHour)
-    highHour := high  // Reset high for the new hour
-    lowHour := low  // Reset low for the new hour
-else
-    highHour := math.max(highHour, high)  // Track highest price within the hour
-    lowHour := math.min(lowHour, low)  // Track lowest price within the hour
-
 // Calculate the discount level using Fibonacci retracement
 discountLevel := lowHour + (highHour - lowHour) * fibLevel
 
